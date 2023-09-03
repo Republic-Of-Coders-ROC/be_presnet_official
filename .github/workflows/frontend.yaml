@@ -1,0 +1,40 @@
+name: Frontend CI
+
+on:
+  pull_request:
+    paths:
+      - "/be-present-frontend/**"
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  merge-frontend:
+    runs-on: ubuntu-20.04
+    continue-on-error: false
+    env:
+      DEV_BUILD_DISABLED: false
+      FULL_BUILD_DISABLED: true
+      CUSTOM_CHECKS_DISABLED: true
+      CONFIGURE_DISABLED: false
+      CHECK_WORK_TREE_STATUS_DISABLED: true
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3.6.0
+        with:
+          node-version: v18.17.0
+
+      - name: Install yarn
+        run: npm install -g yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+        working-directory: ./be-present-frontend
+
+      - name: Run lint check
+        run: yarn lint
+        working-directory: ./be-present-frontend
