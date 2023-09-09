@@ -6,6 +6,7 @@ Official Repository for project Be Present
 
 1. Fork the repository
 2. Clone the repository,
+3. Swati 
 
 ```bash
 git clone <your fork>
