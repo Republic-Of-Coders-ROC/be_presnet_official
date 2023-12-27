@@ -1,44 +1,94 @@
-import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useMediaQuery } from "react-responsive";
+import { NavLink,useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { IoIosArrowBack } from 'react-icons/io';
 import './Navbar.css';
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const isTabletMid = useMediaQuery({ query: "(max-width: 768px)" });
+  const [isOpen, setIsOpen] = useState(isTabletMid ? false : true);
+  // const sidebarRef = useRef();
+  const { pathname } = useLocation();
+  // const [isOpen, setIsOpen] = useState(true);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
 
-  const navbar_animation = {
-    // System view 
-    open: {
-        width: "16rem",
-        transition: {
-          damping: 40,
-        },
+  useEffect(() => {
+    if (isTabletMid) {
+      setIsOpen(false);
+    } else {
+      setIsOpen(true);
+    }
+  }, [isTabletMid]);
 
-    },
-    closed: {
-        width: "4rem",
-        transition: {
-          damping: 40,
+  useEffect(() => {
+    isTabletMid && setIsOpen(false);
+  }, [pathname]);
+
+  const Nav_animation = isTabletMid
+    ? {
+        open: {
+          // x: 0,
+          width: "14rem",
+          transition: {
+            damping: 40,
+          },
         },
-    },
-  };
+        closed: {
+          // x: -250,
+          width: "3rem",
+          transition: {
+            damping: 40,
+            delay: 0.15,
+          },
+        },
+      }
+    : {
+        open: {
+          width: "14rem",
+          transition: {
+            damping: 40,
+          },
+        },
+        closed: {
+          width: "3rem",
+          transition: {
+            damping: 40,
+          },
+        },
+      };
+
+
+  // const navbar_animation = {
+  //   open: {
+  //       width: "14rem",
+  //       transition: {
+  //         damping: 40,
+  //       },
+
+  //   },
+  //   closed: {
+  //       width: "3rem",
+  //       transition: {
+  //         damping: 40,
+  //       },
+  //   },
+  // };
 
   const image_animation = {
     open: {
-      width: "16.625rem",
-      height: "9.5rem",
+      width: "15rem",
+      height: "9rem",
       transition: {
         damping: 40,
       },
     },
     closed: {
       x: -100,
-      scale: 0.4,
+      scale: 0,
       transition: {
         damping: 40,
       },
@@ -50,7 +100,9 @@ const Navbar = () => {
   
     <div className="body">
       <motion.div
-        variants={navbar_animation}
+        // ref={sidebarRef}
+        variants={Nav_animation}
+        initial={{ x: isTabletMid ? -250 : 0 }}
         animate={isOpen ? 'open' : 'closed'}
         className="nav-layout"
       >
